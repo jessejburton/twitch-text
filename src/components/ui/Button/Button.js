@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
-import { hexToRgba } from '../../../utilities/colors'
+import { hexToRgba } from '../../utilities/colors'
 
 const Button = ({
   children,
@@ -102,12 +102,12 @@ const StyledButton = styled.button`
   }
 
   /* From Theme */
-  color: ${props => props.theme.buttons.buttonTextColor};
+  color: ${props => props.theme.buttons.textColor};
   background-color: ${props => props.theme.colors.primary};
 
   &:hover {
     background-color: ${props => props.theme.colors.primaryDark};
-    color: ${props => props.theme.buttons.buttonTextColor};
+    color: ${props => props.theme.buttons.textColor};
   }
 
   &:focus {
@@ -123,15 +123,15 @@ const StyledButton = styled.button`
   &.inverted:hover {
     background-color: ${props => props.theme.colors.primaryDark};
     border-color: ${props => props.theme.colors.primaryDark};
-    color: ${props => props.theme.buttons.buttonTextColor};
+    color: ${props => props.theme.buttons.textColor};
   }
 
   &.round {
-    border-radius: ${props => props.theme.buttons.buttonBorderRadius};
+    border-radius: ${props => props.theme.buttons.borderRadius};
   }
 
   &.secondary {
-    color: ${props => props.theme.buttons.buttonTextColorDark};
+    color: ${props => props.theme.buttons.textColorDark};
     background-color: ${props => props.theme.colors.secondary};
     border-color: ${props => props.theme.colors.secondary};
 
@@ -153,9 +153,9 @@ StyledButton.defaultProps = {
       focus: "#90CDF4"
     },
     buttons: {
-      buttonTextColor: "#FFFFFF",
-      buttonTextColorDark: "#1A202C",
-      buttonBorderRadius: "12px",
+      textColor: "#FFFFFF",
+      textColorDark: "#1A202C",
+      borderRadius: "12px",
     }
   }
 }

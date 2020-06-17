@@ -1,7 +1,12 @@
 import { StyledContent } from './content.styles'
-import { FullPanel } from './layout.styles'
+import { FullSection, FullPage, MediumSpace } from './layout.styles'
+import { Form, FormBlock } from './form.styles'
 
 export {
   StyledContent,
-  FullPanel
+  MediumSpace,
+  FullSection,
+  FullPage,
+  Form,
+  FormBlock
 }

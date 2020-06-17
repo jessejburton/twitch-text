@@ -1,29 +1,34 @@
 import { faInfoCircle, faExclamationCircle, faExclamationTriangle, faCheckCircle } from '@fortawesome/free-solid-svg-icons'
 
-export const darkTheme = {
+export const defaultTheme = {
   colors: {
-    primary: "#FFFFFF",
-    primaryDark: "#4C51BF",
-    backgroundColor: "#5A67D8",
-    fontColor: "#FFFFFF"
+    primary: "#9147FF",
+    primaryDark: "#6d35b8;",
+    background: "#1F1F23",
+    backgroundHeader: "#18181B",
+    font: "#DEDEE3",
+    fontHeader: "#9147FF",
+    focus: "#90CDF4"
   },
   sizes: {
     maxContentWidth: "1200px",
   },
   buttons: {
-    buttonTextColor: "#FFFFFF",
-    buttonBorderRadius: "5px",
-    defaultRound: false
+    textColor: "#FFFFFF",
+    textColorDark: "#1A202C",
+    borderRadius: "5px",
+    isRound: false
   },
   message: {
     base: {
       borderRadius: "5px",
-      defaultRound: false
+      isRound: false,
+      isToast: true
     },
     default: {
       color: "#2A4365",
       backgroundColor: "#BEE3F8",
-      borderColor: "##90CDF4",
+      borderColor: "#90CDF4",
       icon: faInfoCircle
     },
     success: {

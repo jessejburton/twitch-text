@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { ThemeContext } from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
-import { hexToRgba } from '../../../utilities/colors'
+import { hexToRgba } from '../../utilities/colors'
 
 const LinkButton = ({ children, iconLeft, iconRight, onClick, round, ...rest }) => {
 
