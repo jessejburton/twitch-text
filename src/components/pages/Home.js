@@ -1,18 +1,25 @@
 import React, { useContext, useState, useEffect } from 'react'
 import styled, { ThemeContext } from 'styled-components';
-import gql from 'graphql-tag'
-import { useQuery, useMutation } from 'react-apollo'
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { faCopy, faShareSquare } from '@fortawesome/free-solid-svg-icons'
 
+import { serialize } from '../utilities/form'
 import { useAuth0 } from "../../react-auth0-spa";
 import { Form, FormBlock, MediumSpace } from '../styles'
-import { Button, DotWave } from '../ui'
+import { Button, DotWave, Message } from '../ui'
 import { Layout } from '../layout'
-
 import {
   StyledContent,
   FullSection,
   FullPage
 } from '../styles'
+
+import { useQuery, useMutation } from 'react-apollo'
+import { CREATE_TEXT, UPDATE_TEXT, GET_TEXTS } from '../../queries/text.queries'
+
+const domain = window.location.port ?
+  window.location.protocol + "//" + window.location.hostname + ":" + window.location.port :
+  window.location.protocol + "//" + window.location.hostname
 
 const Home = () => {
 
@@ -22,35 +29,67 @@ const Home = () => {
   /* State */
   const [text, setText] = useState("")
   const [textData, setTextData] = useState([])
+  const [message, setMessage] = useState(null)
 
   /* Context */
   const theme = useContext(ThemeContext);
 
-  /* Queriers */
+  /* Queriers & Mutations */
   const { loading: dataLoading, data, refetch } = useQuery(GET_TEXTS, {
     variables: {
       email: ""
     }
   });
+  const [createText] = useMutation(CREATE_TEXT)
+  const [updateText] = useMutation(UPDATE_TEXT)
 
   /* Functions */
   function addText() {
-    console.log(text)
-    setTextData(prevState => {
-      return {
-        text,
-        ...prevState,
+    createText({
+      variables: {
+        email: user.email,
+        text
       }
+    }).then(response => {
+      displayTexts()
+      setText("")
+    })
+  }
+
+  function displayTexts() {
+    refetch({
+      email: user.email
+    }).then(response => {
+      setTextData(response.data.texts)
+    })
+  }
+
+  function handleUpdateText(e) {
+    e.preventDefault();
+    var form = e.currentTarget;
+    var data = serialize(form, true);
+
+    updateText({
+      variables: {
+        id: data.id,
+        text: data.text,
+        color: data.color,
+        size: data.size,
+        font: data.font
+      }
+    }).then(response => {
+      console.log(response)
+      setMessage({
+        type: "success",
+        title: "Text Updated",
+        text: `Your text should now read <strong>${data.text}</strong>`
+      })
     })
   }
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      refetch({
-        email: user.email
-      }).then(response => {
-        setTextData(response.data.texts)
-      })
+      displayTexts()
     }
   }, [user])
 
@@ -69,14 +108,16 @@ const Home = () => {
 
   if (!isAuthenticated) {
     return (
-      <FullSection
-        bgColor={theme.colors.background}
-        color={theme.colors.font}>
-        <StyledContent>
-          <h1>Welcome</h1>
-          <p><TextButtonLink hoverColor={theme.colors.primary} onClick={loginWithRedirect}>Login</TextButtonLink> or <TextButtonLink hoverColor={theme.colors.primary} onClick={loginWithRedirect}>Signup</TextButtonLink> to start creating text browser sources for your Twitch stream.</p>
-        </StyledContent>
-      </FullSection>
+      <Layout>
+        <FullSection
+          bgColor={theme.colors.background}
+          color={theme.colors.font}>
+          <StyledContent>
+            <h1>Welcome</h1>
+            <p><TextButtonLink hoverColor={theme.colors.primary} onClick={loginWithRedirect}>Login</TextButtonLink> or <TextButtonLink hoverColor={theme.colors.primary} onClick={loginWithRedirect}>Signup</TextButtonLink> to start creating text browser sources for your Twitch stream.</p>
+          </StyledContent>
+        </FullSection>
+      </Layout>
     )
   }
 
@@ -100,7 +141,7 @@ const Home = () => {
                     onChange={(e) => setText(e.target.value)} />
                   <Button
                     style={{ width: "100px", height: "auto" }}
-                    onClick={(e) => { e.preventDefault(); setText(e.target.value) }}>
+                    onClick={(e) => { e.preventDefault(); addText() }}>
                     Add
                 </Button>
                 </div>
@@ -109,19 +150,81 @@ const Home = () => {
             <MediumSpace>
               <StyledTexts>
                 {textData &&
-                  textData.map(text => (
-                    <div key={text.id}>{text.text}</div>
-                  ))
+                  textData.map(text => {
+                    let textURL = `${domain}/text/${text.id}`
+                    return (
+                      <form
+                        className="text"
+                        key={text.id}
+                        onSubmit={handleUpdateText}>
+                        <div className="text-inputs">
+                          <div>
+                            <input
+                              name="text"
+                              type="text"
+                              className="text-input"
+                              defaultValue={text.text} />
+                          </div>
+                          <div>
+                            <select
+                              name="font"
+                              defaultValue={text.font}>
+                              <option value="'Stacked Pixel', sans-serif">'Stacked Pixel', sans-serif</option>
+                            </select>
+                            <input
+                              name="color"
+                              type="text"
+                              defaultValue={text.color} />
+                            <input
+                              name="size"
+                              type="text"
+                              defaultValue={text.size} />
+                            <input
+                              name="id"
+                              type="hidden"
+                              defaultValue={text.id} />
+                          </div>
+                        </div>
+                        <div>
+                          <Button
+                            type="submit"
+                            iconLeft={faShareSquare}>
+                            Update
+                          </Button>
+                          <CopyToClipboard
+                            text={textURL}
+                            onCopy={() => setMessage({ title: "The following link has been copied to your clipboard.", text: textURL })}>
+                            <Button
+                              title="Click to copy the access code to your clipboard"
+                              style={{ marginRight: "1rem" }}
+                              onClick={(e) => e.preventDefault()}
+                              iconLeft={faCopy}>
+                              Copy URL
+                            </Button>
+                          </CopyToClipboard>
+                        </div>
+                      </form>
+                    )
+                  }
+                  )
                 }
               </StyledTexts>
             </MediumSpace>
           </StyledContent>
         </FullSection>
+        {message &&
+          <Message
+            toast
+            dismiss={() => setMessage(null)}
+            title={message.title || ""}
+            type={message.type || "default"}>
+            {message.text}
+          </Message>
+        }
       </Layout>
     )
   }
 }
-
 export default Home
 
 const TextButtonLink = styled.button`
@@ -158,36 +261,48 @@ const TextButtonLink = styled.button`
 
 const StyledTexts = styled.div`
 
-`
+  .text {
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 2.5rem 0;
+    background-color: #262629;
+    padding: 1rem;
 
-const GET_TEXTS = gql`
-  query getTexts($email: String!){
-    texts(where: {email: $email}){
-      id
-      text
-      font
-      size
+    .text-input {
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+
+    .text-inputs {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      div {
+        display: flex;
+        justify-content: space-between;
+      }
+
+      input[type=text],
+      select{
+        background-color: #3A3A3C;
+        border: 1px solid #3A3A3C;
+        padding: 1.5rem 2rem;
+        color: inherit;
+        margin-right: 1rem;
+      }
+
+      input[type=text]:focus,
+      select:focus {
+        background-color: #18181B;
+        border: 1px solid #6d35b8;
+        outline: none;
+      }
     }
   }
+
+
 `
 
-const CREATE_TEXT = gql`
-  mutation addText(
-    $email: String!,
-    $text: String!,
-    $font: String!,
-    $size: String!
-  ){
-    createText(data: {
-      email: $email
-      text: $text
-      font: $font
-      size: $size
-    }){
-      id
-      text
-      font
-      size
-    }
-  }
-`

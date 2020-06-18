@@ -6,16 +6,27 @@ import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
-import { Layout } from './components/layout'
 import { Home } from './components/pages'
 import { Text } from './components/pages'
 import { defaultTheme } from './components/themes'
 
-const GRAPHCMS_API = 'https://api-us-east-1.graphcms.com/v2/ckbiiw2xy0ihs01z17lxs59c4/master'
+const GRAPHCMS_API = 'https://api-euwest.graphcms.com/v1/ck1z5mgr22jxj01a0cifs57yw/master'
+
+const defaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'ignore',
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all',
+  },
+}
 
 const client = new ApolloClient({
   link: new HttpLink({ uri: GRAPHCMS_API }),
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  defaultOptions: defaultOptions,
 });
 
 function App() {
@@ -26,7 +37,7 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/" component={Home} />
-            <Route path="/text" component={Text} />
+            <Route path="/text/:id" component={Text} />
           </Switch>
         </Router>
       </ApolloProvider>

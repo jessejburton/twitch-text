@@ -1,13 +1,9 @@
 import React, { useContext, useState } from 'react'
-import { ThemeContext } from 'styled-components';
 import styled from 'styled-components'
 import { Button } from '../Button'
 import { motion } from 'framer-motion'
 
 const ConfirmButton = ({ children, onConfirm, onClick = null, ...rest }) => {
-
-  /* Theme Context */
-  const themeContext = useContext(ThemeContext);
 
   /* State */
   const [confirm, setConfirm] = useState(false)

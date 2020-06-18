@@ -19,3 +19,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+@font-face {
+  font-family: 'Stacked Pixel';
+  src: local('Stacked Pixel'), url(./fonts/stacked-pixel.woff) format('woff');
+}
