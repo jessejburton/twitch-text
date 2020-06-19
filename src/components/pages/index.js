@@ -1,4 +1,5 @@
 import Home from './Home'
 import Text from './Text'
+import Logout from './Logout'
 
-export { Home, Text }
+export { Home, Text, Logout }

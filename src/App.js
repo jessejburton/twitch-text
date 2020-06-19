@@ -6,8 +6,7 @@ import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloProvider } from "react-apollo";
 
-import { Home } from './components/pages'
-import { Text } from './components/pages'
+import { Home, Text, Logout } from './components/pages'
 import { defaultTheme } from './components/themes'
 
 const GRAPHCMS_API = 'https://api-euwest.graphcms.com/v1/ck1z5mgr22jxj01a0cifs57yw/master'
@@ -38,6 +37,7 @@ function App() {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/text/:id" component={Text} />
+            <Route path="/logout" component={Logout} />
           </Switch>
         </Router>
       </ApolloProvider>
