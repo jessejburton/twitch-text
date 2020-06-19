@@ -78,7 +78,6 @@ const Home = () => {
         font: data.font
       }
     }).then(response => {
-      console.log(response)
       setMessage({
         type: "success",
         title: "Text Updated",
@@ -93,18 +92,20 @@ const Home = () => {
     }
   }, [user])
 
-  if (loading || dataLoading) return (
-    <FullPage
-      bgColor={theme.colors.background}
-      color={theme.colors.font}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center"
-      }}>
-      <DotWave />
-    </FullPage>
-  )
+  if (loading || dataLoading) {
+    return (
+      <FullPage
+        bgColor={theme.colors.background}
+        color={theme.colors.font}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}>
+        <DotWave />
+      </FullPage>
+    )
+  }
 
   if (!isAuthenticated) {
     return (
@@ -209,6 +210,23 @@ const Home = () => {
                   )
                 }
               </StyledTexts>
+            </MediumSpace>
+            <MediumSpace>
+              <FormBlock>
+                <h4>Moderators</h4>
+                <div style={{ display: "flex", margin: "2rem 0" }}>
+                  <input
+                    style={{ maxWidth: "300px" }}
+                    type="text"
+                    placeholder="moderator email" />
+                  <Button
+                    style={{ height: "auto" }}>Add Moderator</Button>
+                </div>
+                {textData.moderators ?
+                  (<p>{textData.moderators}</p>) :
+                  (<p>no moderators</p>)
+                }
+              </FormBlock>
             </MediumSpace>
           </StyledContent>
         </FullSection>

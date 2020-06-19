@@ -29,6 +29,7 @@ export const GET_TEXTS = gql`
       size
       color
       css
+      moderators
     }
   }
 `
