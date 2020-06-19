@@ -21,15 +21,14 @@ export const CREATE_TEXT = gql`
 `
 
 export const GET_TEXTS = gql`
-  query getTexts($email: String!){
-    texts(where: {email: $email}){
+  query getTexts{
+    texts{
       id
       text
       font
       size
       color
       css
-      moderators
     }
   }
 `

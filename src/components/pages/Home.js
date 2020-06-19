@@ -35,7 +35,12 @@ const Home = () => {
   const theme = useContext(ThemeContext);
 
   /* Queriers & Mutations */
-  const { loading: dataLoading, data, refetch } = useQuery(GET_TEXTS, {
+  const { loading: dataLoading, refetch } = useQuery(GET_TEXTS, {
+    variables: {
+      email: ""
+    }
+  });
+  const { loading: modsLoading, refetch: refetchMods } = useQuery(GET_TEXTS, {
     variables: {
       email: ""
     }
@@ -214,7 +219,7 @@ const Home = () => {
             <MediumSpace>
               <FormBlock>
                 <h4>Moderators</h4>
-                <div style={{ display: "flex", margin: "2rem 0" }}>
+                <div style={{ display: "flex", margin: "2lrem 0" }}>
                   <input
                     style={{ maxWidth: "300px" }}
                     type="text"
